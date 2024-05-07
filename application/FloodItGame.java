@@ -27,9 +27,9 @@ public class FloodItGame extends Application {
 	public Text moves = new Text("MOVES ");
 	public Text movesLeft = new Text(); // To dynamically display the number of moves left
 	public int numMovesLeft = 0; // To calculate the number of moves left
-	public int numColours = 4; // Number of colours chosen for the game
-	public int n = 6; // To track the n x n grid size
-	public Rectangle[][] grid; // To hold the rectangles in the grid
+	public int numColours = 2; // Number of colours chosen for the game
+	public int n = 4; // To track the n x n grid size
+	public Rectangle[][] rectangles; // To hold the rectangles in the grid
 	public ComboBox<Integer> cbGrid = new ComboBox<Integer>();
 	public ComboBox<Integer> cbColours = new ComboBox<Integer>();
 	public Button newGame = new Button("New Game");
@@ -55,18 +55,69 @@ public class FloodItGame extends Application {
 		
 		// Fill the gridpane game board randomly with coloured rectangles
 		board.setGridLinesVisible(true);
-		grid = new Rectangle[n][n];
-		for(int row = 0; row < grid.length; row++) {
-			for(int col = 0; col < grid.length; col++) {
+		rectangles = new Rectangle[n][n];
+		for(int row = 0; row < rectangles.length; row++) {
+			for(int col = 0; col < rectangles[row].length; col++) {
 				// Calculate a random number and set the new rectangle to that numbered colour
 				int randomColour = (int)Math.floor(Math.random() * numColours);
 				rect = new Rectangle(30, 30, Colours[randomColour]);
 				// Set the rectangle grid map to this rectangle
-				grid[row][col] = rect;
+				rectangles[row][col] = rect;
 				// Add the rectangle to the game board
-				board.add(rect, row, col);
+				board.add(rect, col, row);
 			}
 		}
+		
+//		Rectangle rect = new Rectangle(30, 30, Color.ORANGE);
+//		rectangles[0][0] = rect;
+//		board.add(rect, 0, 0);
+//		rect = new Rectangle(30, 30, Color.ORANGE);
+//		rectangles[0][1] = rect;
+//		board.add(rect, 1, 0);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[0][2] = rect;
+//		board.add(rect, 2, 0);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[0][3] = rect;
+//		board.add(rect, 3, 0);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[1][0] = rect;
+//		board.add(rect, 0, 1);
+//		rect = new Rectangle(30, 30, Color.ORANGE);
+//		rectangles[1][1] = rect;
+//		board.add(rect, 1, 1);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[1][2] = rect;
+//		board.add(rect, 2, 1);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[1][3] = rect;
+//		board.add(rect, 3, 1);
+//		rect = new Rectangle(30, 30, Color.ORANGE);
+//		rectangles[2][0] = rect;
+//		board.add(rect, 0, 2);
+//		rect = new Rectangle(30, 30, Color.ORANGE);
+//		rectangles[2][1] = rect;
+//		board.add(rect, 1, 2);
+//		rect = new Rectangle(30, 30, Color.BLUE);
+//		rectangles[2][2] = rect;
+//		board.add(rect, 2, 2);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[2][3] = rect;
+//		board.add(rect, 3, 2);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[3][0] = rect;
+//		board.add(rect, 0, 3);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[3][1] = rect;
+//		board.add(rect, 1, 3);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[3][2] = rect;
+//		board.add(rect, 2, 3);
+//		rect = new Rectangle(30, 30, Color.RED);
+//		rectangles[3][3] = rect;
+//		board.add(rect, 3, 3);
+//		rect = new Rectangle(30, 30, Color.RED);
+		
 		// Align and add the board to the root
 		board.setAlignment(Pos.CENTER);
 		root.setCenter(board);
@@ -84,8 +135,8 @@ public class FloodItGame extends Application {
 		root.setBottom(hbox);
 		
 		// Locate and set the flood zone colour of the board
-		floodColour = grid[0][0].getFill();
-		
+		floodColour = rectangles[0][0].getFill();
+
 		// Initialize the floodZone to all false
 		for(int row = 0; row < floodZone.length; row++) {
 			for(int col = 0; col < floodZone[row].length; col++) {
@@ -97,36 +148,10 @@ public class FloodItGame extends Application {
 		floodZone[0][0] = 1;
 		
 		// Locate any other adjacent similar-coloured squares
+//		setFloodZone(0, 0);
 		setFloodZone();
 		
 		getFloodZone();
-		
-		
-		
-		
-		
-		
-		
-		
-//		System.out.println("RED " + new Rectangle(10, 10, Color.RED).getFill());
-//		System.out.println("ORANGE " + new Rectangle(10, 10, Color.ORANGE).getFill());
-//		System.out.println("YELLOW " + new Rectangle(10, 10, Color.YELLOW).getFill());
-//		System.out.println("GREEN" + new Rectangle(10, 10, Color.GREEN).getFill());
-//		System.out.println("BLUE " + new Rectangle(10, 10, Color.BLUE).getFill());
-//		System.out.println("MAGENTA " + new Rectangle(10, 10, Color.MAGENTA).getFill());
-//		System.out.println("CYAN " + new Rectangle(10, 10, Color.CYAN).getFill());
-//		System.out.println("BLACK " + new Rectangle(10, 10, Color.BLACK).getFill());
-//		System.out.println("GRAY " + new Rectangle(10, 10, Color.GRAY).getFill());
-//		System.out.println("PINK " + new Rectangle(10, 10, Color.PINK).getFill());
-//		System.out.println("WHITE " + new Rectangle(10, 10, Color.WHITE).getFill());
-//		System.out.println(floodZone.getFill() == Color.RED);
-//		System.out.println(floodZone.getFill() == Color.YELLOW);
-//		System.out.println(floodZone.getFill() == Color.BLUE);
-//		System.out.println(floodZone.getFill() == Color.GREEN);
-//		System.out.println(floodZone.getFill() == Color.MAGENTA);
-//		System.out.println(floodZone.getFill() == Color.ORANGE);
-//		System.out.println(floodZone.getFill() == Color.BLACK);
-//		System.out.println(floodZone.getFill() == Color.WHITE);
 	}
 	
 	
@@ -165,16 +190,51 @@ public class FloodItGame extends Application {
 	
 	// METHOD: method to set the squares of the flood zone
 	public void setFloodZone() {
+		// Loop through rows
 		for(int row = 0; row < floodZone.length; row++) {
+			// Loop through columns
 			for(int col = 0; col < floodZone[row].length; col++) {
 				// If the fill colours match, and the rectangle is adjacent to the flood zone
-				if(grid[row][col].getFill() == floodColour && isFloodAdjacent(row, col)) {
+				if(rectangles[row][col].getFill() == floodColour && isFloodAdjacent(row, col)) {
 					// Set floodZone to include this new value
-					floodZone[col][row] = 1; // TODO: Big fix: WHY are the row / col backwards?
+					floodZone[row][col] = 1;
+					// Backtrack to check to see if it is adjacent to any other upper-or-left rectangles with the 
+					// same-colour values that have not yet been added to floodzone
+					if(row > 0 && col > 0) {
+						for(int backwardsCol = col; backwardsCol > 0; backwardsCol--) {
+							// Left rectangle
+							if(rectangles[row][backwardsCol - 1].getFill() == floodColour) {
+								floodZone[row][backwardsCol - 1] = 1;
+							}
+							// Upper rectangle
+							if(rectangles[row - 1][backwardsCol].getFill() == floodColour) {
+								floodZone[row - 1][backwardsCol] = 1;
+							}
+						}
+					}
 				}
 			}
 		}
+//		setFloodZone(0, 0);
 	}
+	// TEST
+//	public void setFloodZone(int row, int col) {
+//	    // Mark the current cell as part of the flood zone
+//	    floodZone[row][col] = 1;
+//	    
+//	    // Check adjacent cells for each direction
+//	    int[][] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+//	    for (int[] dir : directions) {
+//	    	
+//	        int newRow = row + dir[0];
+//	        int newCol = col + dir[1];
+//	        // Check if the new cell is within boundaries and has the same fill color
+//	        if (isInBoundaries(newRow, newCol) && floodZone[newRow][newCol] == 0 && rectangles[newRow][newCol].getFill() == floodColour) {
+//	            // Recursively call setFloodZone for the adjacent cell
+//	            setFloodZone(newRow, newCol);
+//	        }
+//	    }
+//	}
 	
 	
 	// METHOD: displays the flood zone
@@ -186,6 +246,18 @@ public class FloodItGame extends Application {
 			System.out.println();
 		}
 	}	
+	
+	
+	// METHOD: for changing the colour of the flood zone
+	public void changeFloodColour() {
+		for(int row = 0; row < floodZone.length; row++) {
+			for(int col = 0; col < floodZone[row].length; col++) {
+				if(floodZone[row][col] == 1) {
+					rectangles[row][col].setFill(floodColour);
+				}
+			}
+		}
+	}
 	
 	
 	@Override
@@ -207,9 +279,24 @@ public class FloodItGame extends Application {
 				Rectangle selectedRect = (Rectangle)e.getTarget();
 				
 				// TODO: If the selected rectangle has a different colour from the flood zone
-//				if(selectedRect.getFill() != Color.RED) {
-//					System.out.print(selectedRect.getFill());
-//				}
+				if(selectedRect.getFill() != floodColour) {
+					// Set the flood colour to the new colour
+					floodColour = selectedRect.getFill();
+					
+					// Locate selected Rect
+//					for(int row = 0; row < rectangles.length; row++) {
+//						for(int col = 0; col < rectangles[row].length; col++) {
+//							if(selectedRect == rectangles[row][col]) {
+//								setFloodZone(row, col);
+//							}
+//						}	
+//					}
+					
+					setFloodZone();
+					changeFloodColour();
+					System.out.println();
+					getFloodZone();
+				}
 			});
 			
 		} catch(Exception e) {
