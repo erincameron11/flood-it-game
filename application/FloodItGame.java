@@ -27,8 +27,8 @@ public class FloodItGame extends Application {
 	public Text moves = new Text("MOVES ");
 	public Text movesLeft = new Text(); // To dynamically display the number of moves left
 	public int numMovesLeft = 0; // To calculate the number of moves left
-	public int numColours = 2; // Number of colours chosen for the game
-	public int n = 4; // To track the n x n grid size
+	public int numColours = 6; // Number of colours chosen for the game
+	public int n = 6; // To track the n x n grid size
 	public Rectangle[][] rectangles; // To hold the rectangles in the grid
 	public ComboBox<Integer> cbGrid = new ComboBox<Integer>();
 	public ComboBox<Integer> cbColours = new ComboBox<Integer>();
@@ -148,9 +148,12 @@ public class FloodItGame extends Application {
 		floodZone[0][0] = 1;
 		
 		// Locate any other adjacent similar-coloured squares
-//		setFloodZone(0, 0);
-		setFloodZone();
+//		setFloodZone();
 		
+		
+		setFloodZone(0, 0); // recursive method
+		
+		// Print out the flood zone (testing)
 		getFloodZone();
 	}
 	
@@ -188,52 +191,35 @@ public class FloodItGame extends Application {
 	}
 	
 	
-	// METHOD: method to set the squares of the flood zone
-	public void setFloodZone() {
-		// Loop through rows
-		for(int row = 0; row < floodZone.length; row++) {
-			// Loop through columns
-			for(int col = 0; col < floodZone[row].length; col++) {
-				// If the fill colours match, and the rectangle is adjacent to the flood zone
-				if(rectangles[row][col].getFill() == floodColour && isFloodAdjacent(row, col)) {
-					// Set floodZone to include this new value
-					floodZone[row][col] = 1;
-					// Backtrack to check to see if it is adjacent to any other upper-or-left rectangles with the 
-					// same-colour values that have not yet been added to floodzone
-					if(row > 0 && col > 0) {
-						for(int backwardsCol = col; backwardsCol > 0; backwardsCol--) {
-							// Left rectangle
-							if(rectangles[row][backwardsCol - 1].getFill() == floodColour) {
-								floodZone[row][backwardsCol - 1] = 1;
-							}
-							// Upper rectangle
-							if(rectangles[row - 1][backwardsCol].getFill() == floodColour) {
-								floodZone[row - 1][backwardsCol] = 1;
-							}
-						}
-					}
-				}
-			}
-		}
-//		setFloodZone(0, 0);
-	}
-	// TEST
-//	public void setFloodZone(int row, int col) {
-//	    // Mark the current cell as part of the flood zone
-//	    floodZone[row][col] = 1;
-//	    
-//	    // Check adjacent cells for each direction
-//	    int[][] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-//	    for (int[] dir : directions) {
-//	    	
-//	        int newRow = row + dir[0];
-//	        int newCol = col + dir[1];
-//	        // Check if the new cell is within boundaries and has the same fill color
-//	        if (isInBoundaries(newRow, newCol) && floodZone[newRow][newCol] == 0 && rectangles[newRow][newCol].getFill() == floodColour) {
-//	            // Recursively call setFloodZone for the adjacent cell
-//	            setFloodZone(newRow, newCol);
-//	        }
-//	    }
+//	// METHOD: method to set the squares of the flood zone
+//	public void setFloodZone() {
+//		// Loop through rows
+//		for(int row = 0; row < floodZone.length; row++) {
+//			// Loop through columns
+//			for(int col = 0; col < floodZone[row].length; col++) {
+//				// If the fill colours match, and the rectangle is adjacent to the flood zone
+//				if(rectangles[row][col].getFill() == floodColour && isFloodAdjacent(row, col)) {
+//					// Set floodZone to include this new value
+//					floodZone[row][col] = 1;
+//					
+//					
+//					// Backtrack to check to see if it is adjacent to any other upper-or-left rectangles with the 
+//					// same-colour values that have not yet been added to floodzone
+//					if(row > 0 && col > 0) {
+//						for(int backwardsCol = col; backwardsCol > 0; backwardsCol--) {
+//							// Left rectangle
+//							if(rectangles[row][backwardsCol - 1].getFill() == floodColour) {
+//								floodZone[row][backwardsCol - 1] = 1;
+//							}
+//							// Upper rectangle
+//							if(rectangles[row - 1][backwardsCol].getFill() == floodColour) {
+//								floodZone[row - 1][backwardsCol] = 1;
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 //	}
 	
 	
@@ -255,6 +241,33 @@ public class FloodItGame extends Application {
 				if(floodZone[row][col] == 1) {
 					rectangles[row][col].setFill(floodColour);
 				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	// RECURSIVE TEST METHOD
+	public void setFloodZone(int row, int col) {
+		// Base Case
+		floodZone[row][col] = 1;
+		
+		// Otherwise, recurse
+		int[][] directions = {{0, -1}, // left 
+							  {0, 1},  // right
+							  {-1, 0},  // above
+							  {1, 0}}; // below
+		for(int[] d : directions) {
+			int newRow = row + d[0];
+			int newCol = col + d[1];
+			
+			// If we are in boundaries, the floodzone hasn't reached there yet, and the fill colours match
+	        if (isInBoundaries(newRow, newCol) && floodZone[newRow][newCol] == 0 && rectangles[newRow][newCol].getFill() == floodColour) {
+	        	// Recursive call
+	        	setFloodZone(newRow, newCol);
 			}
 		}
 	}
@@ -284,15 +297,15 @@ public class FloodItGame extends Application {
 					floodColour = selectedRect.getFill();
 					
 					// Locate selected Rect
-//					for(int row = 0; row < rectangles.length; row++) {
-//						for(int col = 0; col < rectangles[row].length; col++) {
-//							if(selectedRect == rectangles[row][col]) {
-//								setFloodZone(row, col);
-//							}
-//						}	
-//					}
+					for(int row = 0; row < rectangles.length; row++) {
+						for(int col = 0; col < rectangles[row].length; col++) {
+							if(selectedRect == rectangles[row][col]) {
+								setFloodZone(row, col);
+							}
+						}	
+					}
 					
-					setFloodZone();
+//					setFloodZone();
 					changeFloodColour();
 					System.out.println();
 					getFloodZone();
